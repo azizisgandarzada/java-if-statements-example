@@ -24,19 +24,19 @@ public final class PaymentServiceImpl implements PaymentService {
 
     @Override
     public String pay(PaymentRequest paymentRequest) {
-        Merchant merchant = getOrElseThrowMerchantNotFound(paymentRequest.merchantId());
-        Card card = getOrElseThrowCardNotFound(paymentRequest.cardId(), paymentRequest.userId());
+        Merchant merchant = getOrElseThrowIfMerchantNotFound(paymentRequest.merchantId());
+        Card card = getOrElseThrowIfCardNotFound(paymentRequest.cardId(), paymentRequest.userId());
         throwIfAmountBelowMerchantMinAmount(paymentRequest.amount(), merchant);
         throwIfAmountExceededMerchantMaxAmount(paymentRequest.amount(), merchant);
         throwIfCardBlocked(card);
         return "ok";
     }
 
-    private Merchant getOrElseThrowMerchantNotFound(Integer merchantId) {
+    private Merchant getOrElseThrowIfMerchantNotFound(Integer merchantId) {
         return merchantRepository.findById(merchantId).orElseThrow(MerchantNotFoundException::new);
     }
 
-    private Card getOrElseThrowCardNotFound(Integer cardId, Integer userId) {
+    private Card getOrElseThrowIfCardNotFound(Integer cardId, Integer userId) {
         return cardRepository.findByIdAndUserId(cardId, userId).orElseThrow(CardNotFoundException::new);
     }
 
