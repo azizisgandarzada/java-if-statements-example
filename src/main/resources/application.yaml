@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: banl-ms
+  profiles:
+    active:
+      - db
+      - server
